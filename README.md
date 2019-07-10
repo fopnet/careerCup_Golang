@@ -1,1 +1,1 @@
-# Questões do CareerCup implmentadas em Go-lang
+# Questões do CareerCup implementadas em Go-lang
