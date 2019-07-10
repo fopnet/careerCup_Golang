@@ -66,7 +66,7 @@ func solution4(L []int, n int) []int {
 	return sublist[rndIdx]
 }
 
-func solution3(a []int, n int) []int {
+func solution3_Faster(a []int, n int) []int {
 	b := []int{}
 	rnd := -1
 
