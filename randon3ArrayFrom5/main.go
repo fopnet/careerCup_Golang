@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 	"sort"
-	"time"
+
+	"github.com/fopnet/carrerCup_Golang/numberUtil"
 )
 
 /**
@@ -59,7 +59,7 @@ func solution4(L []int, n int) []int {
 		}
 	}
 
-	rndIdx := randomRange(0, len(sublist)-1)
+	rndIdx := numberUtil.RandomRange(0, len(sublist)-1)
 
 	fmt.Println("subList", rndIdx, sublist)
 
@@ -74,7 +74,7 @@ func solution3_Faster(a []int, n int) []int {
 		max := i + n - 1
 		min := rnd + 1
 
-		rnd = randomRange(min, max)
+		rnd = numberUtil.RandomRange(min, max)
 		fmt.Println("rnd", min, "<=", rnd, "<=", max)
 
 		b = append(b, a[rnd])
@@ -89,7 +89,7 @@ func solution3_Faster(a []int, n int) []int {
 func solution2(a []int, n int) []int {
 	b := []int{}
 	for i := 0; i < len(a) && len(b) < n; {
-		rnd := random(i+n-i) + i
+		rnd := numberUtil.Random(i+n-i) + i
 		fmt.Println("rnd", i+n-i, i, rnd)
 
 		b = append(b, a[rnd])
@@ -102,7 +102,7 @@ func solution1(a []int, n int) []int {
 	b := []int{}
 
 	for i := 0; i < n; i++ {
-		rnd := random(len(a))
+		rnd := numberUtil.Random(len(a))
 		b = append(b, a[rnd])
 		a = append(a[:rnd], a[rnd+1:]...)
 		fmt.Println("a,b", a, b)
@@ -111,19 +111,4 @@ func solution1(a []int, n int) []int {
 	sort.Ints(b)
 
 	return b
-}
-
-func randomRange(min int, max int) int {
-	rand.Seed(time.Now().UnixNano())
-
-	return rand.Intn(max+1-min) + min
-}
-
-func random(n int) int {
-	// fmt.Println(n)
-	// fmt.Println(n)
-
-	rand.Seed(time.Now().UnixNano())
-
-	return rand.Intn(n)
 }
