@@ -114,7 +114,7 @@ func (heap HeapImpl) left(i int) int {
  * indexado pela posição i no vetor
  */
 func (heap HeapImpl) right(i int) int {
-	return (i*2 + 1) + 1
+	return i*2 + 2
 	// return (i*2 + 1)
 }
 
@@ -307,24 +307,39 @@ func (this HeapImpl) BFS(level int) ([]Comparable, error) {
 
 }
 
+func (this HeapImpl) getBiggerSmallerIndices(idx int) (smaller, bigger int) {
+	leftIndex := this.left(idx)
+	rightIndex := this.right(idx)
+
+	bigger = this.biggerElement(leftIndex, rightIndex)
+
+	if bigger == leftIndex {
+		smaller = rightIndex
+	} else {
+		smaller = leftIndex
+	}
+
+	return
+}
+
+func (this HeapImpl) canIWalk(numbers []Comparable, idx, top int) bool {
+	canWalk := len(numbers) < cap(numbers)
+	canWalk = canWalk && idx < cap(numbers)
+	canWalk = canWalk && this.getHeap()[idx].CompareTo(this.getHeap()[top]) < 0
+	return canWalk
+}
+
 func (this HeapImpl) VisitTop10(n int) ([]Comparable, error) {
 	numbers := make([]Comparable, 0, n)
 
-	leftIndex := this.left(this._ZERO)
-	rightIndex := this.right(this._ZERO)
-
-	biggest := this.biggerElement(leftIndex, rightIndex)
-	var smallest int
-
-	if biggest == leftIndex {
-		smallest = rightIndex
-	} else {
-		smallest = leftIndex
-	}
+	bigger, smaller := this.getBiggerSmallerIndices(this._ZERO)
 
 	numbers = append(numbers, this.RootElement())
-	this.visitBranch(smallest, biggest, &numbers)
-	this.visitBranch(biggest, biggest, &numbers)
+	numbers = this.visitBranch(smaller, bigger, numbers)
+	// visiting right sub-tree
+	numbers = append(numbers, this.getHeap()[bigger])
+	top, _ := this.getBiggerSmallerIndices(bigger)
+	numbers = this.visitBranch(bigger, top, numbers)
 
 	return numbers, nil
 }
@@ -335,23 +350,19 @@ func (this HeapImpl) VisitTop10(n int) ([]Comparable, error) {
 3. caso ache algum valor maior que o maior, ou não ache mais valores, ou o número de valores seja = 10 retorne
 4. retorne para outra sub-avore ou para a função
 */
-func (this HeapImpl) visitBranch(idx int, top int, numbers *[]Comparable) {
-	if isAccesibleAndNotFull(*numbers, idx) && this.biggerElement(idx, top) == top {
-		leftIndex := this.left(idx)
-		rightIndex := this.right(idx)
+func (this HeapImpl) visitBranch(idx int, top int, numbers []Comparable) []Comparable {
+	if this.canIWalk(numbers, idx, top) {
+		numbers = append(numbers, this.getHeap()[idx])
 
-		*numbers = append(*numbers, this.getHeap()[idx])
+		bigger, smaller := this.getBiggerSmallerIndices(idx)
 
-		if isAccesibleAndNotFull(*numbers, leftIndex) && this.biggerElement(leftIndex, top) == top {
-			// *numbers = append(*numbers, this.getHeap()[leftIndex])
-			this.visitBranch(leftIndex, top, numbers)
-		}
-
-		if isAccesibleAndNotFull(*numbers, rightIndex) && this.biggerElement(rightIndex, top) == top {
-			// *numbers = append(*numbers, this.getHeap()[rightIndex])
-			this.visitBranch(rightIndex, top, numbers)
+		if this.canIWalk(numbers, smaller, top) {
+			numbers = this.visitBranch(smaller, bigger, numbers)
+			numbers = this.visitBranch(bigger, top, numbers)
 		}
 	}
+
+	return numbers
 }
 
 /***************************

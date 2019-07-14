@@ -28,12 +28,19 @@ func (this inteiro) CompareTo(b interface{}) int {
 	}
 }
 
-// 1 = crescente
-// -1 = decrescente
 func generateAscedingComparables(n int) []Comparable {
 	a := []Comparable{}
 	for i := 1; i <= n; i++ {
 		a = append(a, inteiro{i})
+	}
+	return a
+}
+func generateOddAscedingComparables(n int) []Comparable {
+	a := []Comparable{}
+	for i := 1; i <= n; i++ {
+		if i%2 != 0 {
+			a = append(a, inteiro{i})
+		}
 	}
 	return a
 }
@@ -54,6 +61,28 @@ func generateRandomComparables(n int) []Comparable {
 	for i := 1; i <= n; i++ {
 		rnd := numberUtil.RandomRange(0, n)
 		a = append(a, inteiro{rnd})
+	}
+	return a
+}
+
+func generateIntRandom(n int) []int {
+	var a = []int{}
+	for i := 1; i <= n; i++ {
+		rnd := numberUtil.RandomRange(0, n)
+		a = append(a, rnd)
+	}
+	return a
+}
+
+func generateDistinctIntRandom(n int) []int {
+	var a = []int{}
+	sorted := map[int]bool{}
+	for i := 1; i <= n; i++ {
+		rnd := numberUtil.RandomRange(0, n)
+		if _, ok := sorted[rnd]; !ok {
+			a = append(a, rnd)
+			sorted[rnd] = true
+		}
 	}
 	return a
 }
@@ -171,15 +200,42 @@ func TestBFS2(t *testing.T) {
 func TestSearchInOrder(t *testing.T) {
 
 	result := generateAscedingComparables(10)
-	a := generateAscedingComparables(100)
-	heap := NewMaxHeap(a)
+	// a := generateOddAscedingComparables(30)
+	a := generateDescedingComparables(31)
+	heap := NewMinHeap(a)
+	// fmt.Println("heap", heap)
 
 	numbers, err := heap.VisitTop10(10)
 
 	fmt.Println("numbers", numbers)
+	// bfs, err := heap.BFS(4)
+	// fmt.Println("bfs odds", bfs[:10])
 
 	if err != nil {
 		t.Errorf(msg, result, err)
 	}
 
+}
+
+func TestTop10(t *testing.T) {
+
+	numbers := generateDistinctIntRandom(50)
+	fmt.Println("rnd numbers", numbers)
+
+	top10 := make([]int, 10)
+	for i := 0; i < len(top10); i++ {
+		max := numbers[0]
+		iMax := 0
+
+		for j := 1; j < len(numbers); j++ {
+			if max < numbers[j] {
+				max = numbers[j]
+				iMax = j
+			}
+		}
+		top10[i] = max
+		numbers[iMax] = math.MinInt64
+	}
+
+	fmt.Println("top10", top10)
 }
