@@ -1,11 +1,12 @@
 package minMaxHeap
 
 import (
-	"github.com/fopnet/carrerCup_Golang/numberUtil"
 	"fmt"
 	"math"
 	"reflect"
 	"testing"
+
+	"github.com/fopnet/carrerCup_Golang/minMaxHeap"
 )
 
 const msg = "O valor esperado deveria ser %v, mas foi retornado %v"
@@ -99,7 +100,7 @@ the function will return 91 to 100 in reverse order since they are top 10 bigges
 */
 func TestBFS2(t *testing.T) {
 	n := 100
-	a := numberUtil.
+	a := minMaxHeap.GenerateAscedingComparables(n)
 
 	// fmt.Println("a", a)
 	// heap := NewMaxHeap([]Comparable{})

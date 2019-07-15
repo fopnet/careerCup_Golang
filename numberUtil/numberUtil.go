@@ -38,6 +38,14 @@ func GenerateAscending(n int) []int {
 	return a
 }
 
+func GenerateDescending(n int) []int {
+	var a = []int{}
+	for i := n; i > 0; i-- {
+		a = append(a, i)
+	}
+	return a
+}
+
 func GenerateDistinctIntRandom(n int) []int {
 	var a = []int{}
 	sorted := map[int]bool{}

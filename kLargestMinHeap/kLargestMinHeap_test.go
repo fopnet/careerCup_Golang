@@ -5,6 +5,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/fopnet/carrerCup_Golang/numberUtil"
+
 	"github.com/fopnet/carrerCup_Golang/minMaxHeap"
 )
 
@@ -35,8 +37,9 @@ func TestVisitTop10FromHeap(t *testing.T) {
 
 func TestTop10(t *testing.T) {
 
-	numbers := minMaxHeap.GenerateAscedingComparables GenerateAscedingComparables(50)
-	// fmt.Println("rnd numbers", numbers)
+	numbers := numberUtil.GenerateDistinctIntRandom(50)
+	// numbers := numberUtil.GenerateDescending(50)
+	fmt.Println("Top10 numbers", numbers)
 
 	top10 := make([]int, 10)
 	for i := 0; i < len(top10); i++ {
