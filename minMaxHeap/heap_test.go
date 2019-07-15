@@ -204,11 +204,11 @@ func TestVisitTop10FromHeap(t *testing.T) {
 	// a := []Comparable{inteiro{11}, inteiro{3}, inteiro{2}, inteiro{1}, inteiro{15}, inteiro{5},
 	// 	inteiro{4}, inteiro{45}, inteiro{88}, inteiro{96}, inteiro{50}, inteiro{45}}
 	heap := NewMinHeap(a)
-	fmt.Println("heap", heap)
+	// fmt.Println("heap", heap)
 
 	numbers, err := heap.VisitLargestFromHeap(10)
 	fmt.Println("Top10 numbers", numbers)
-	fmt.Println("Original numbers", heap)
+	// fmt.Println("Original numbers", heap)
 
 	// bfs, err := heap.BFS(4)
 	// fmt.Println("bfs odds", bfs[:10])

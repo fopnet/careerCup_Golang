@@ -349,28 +349,35 @@ func (this HeapImpl) BFS(level int) ([]Comparable, error) {
 
 }
 
+/**
+Funcionamento para buscar os n maiores valores
+1. Colocar todos os valores da amostra em uma MinHeapAmostra
+2. Criar outra MinHeapResultado de tamanho n, para armanezar os maiores valores, com a primeira metade da MinHeapAmostra
+3. Varrer a segunda metade MinHeapAmostra, verificando quais valores são maiores que a raiz da MinHeapResultado
+4. Coloque esse valor na MinHeapResultado e chamar o Heapify(0)
+*/
 func (this HeapImpl) VisitLargestFromHeap(n int) ([]Comparable, error) {
 	// minHeap := New(getMinHeapComparator())
 
 	middle := (len(this.heap) / 2) // + 1
-	fmt.Println("heap... ", this.heap)
+	// fmt.Println("heap... ", this.heap)
 
 	fisrtMiddleArray := makeArrayOfComparable(n)
 	copy(fisrtMiddleArray, this.heap[:middle])
-	fmt.Println("arr minheap ", fisrtMiddleArray)
+	// fmt.Println("arr minheap ", fisrtMiddleArray)
 
-	minHeap := NewMinHeap(fisrtMiddleArray)
+	minHeapResultado := NewMinHeap(fisrtMiddleArray)
 
 	for idx := middle; idx < len(this.heap); idx++ {
-		if this.getHeap()[idx].CompareTo(minHeap.RootElement()) > this._ZERO {
-			if minHeap.IsFull() {
-				minHeap.ExtractRootElement()
+		if this.getHeap()[idx].CompareTo(minHeapResultado.RootElement()) > this._ZERO {
+			if minHeapResultado.IsFull() {
+				minHeapResultado.ExtractRootElement()
 			}
-			minHeap.Insert(this.getHeap()[idx])
+			minHeapResultado.Insert(this.getHeap()[idx])
 		}
 	}
 
-	return minHeap.toArray(), nil
+	return minHeapResultado.toArray(), nil
 }
 
 /***************************
