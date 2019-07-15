@@ -23,7 +23,6 @@ func (this dummyComparable) CompareTo(b interface{}) int {
 
 // https://pt.wikipedia.org/wiki/Heap
 type Heap interface {
-	IsEmpty() bool
 	RootElement() Comparable
 	toArray() []Comparable
 
@@ -33,11 +32,13 @@ type Heap interface {
 	Heapsort(array []Comparable) []Comparable
 	EstatisticaDeOrdem(n int) Comparable
 	BFS(level int) ([]Comparable, error)
-	VisitTop10(n int) ([]Comparable, error)
+	VisitLargestFromHeap(n int) ([]Comparable, error)
 	IsMaxHeap() bool
 	IsMinHeap() bool
 
 	Size() int
+	IsEmpty() bool
+	IsFull() bool
 	GetComparator() Comparator
 	SetComparator(comparator Comparator)
 }
@@ -132,6 +133,7 @@ func (this HeapImpl) getHeap() []Comparable {
  * (comparados usando o comparator) elementos na parte de cima da heap.
  */
 func (this HeapImpl) heapify(position int) {
+
 	if position == this._ZERO { // Remove
 		this.heapfyDown(this._ZERO)
 	} else { // Insert
@@ -146,22 +148,57 @@ func (this HeapImpl) heapify(position int) {
 func (this HeapImpl) heapfyDown(index int) {
 	rightIndex := this.right(index)
 	leftIndex := this.left(index)
-	var largest int
 
-	if leftIndex <= this.index && this.biggerElement(leftIndex, rightIndex) == leftIndex {
-		largest = leftIndex
+	// If Leaf Node, Simply return
+	if index >= this.Size()/2 {
+		return
+	}
+
+	// Select minimum from left node and
+	// current node i, and store the minimum
+	// index in smallest variable
+	var smallest int
+	if this.getHeap()[leftIndex].CompareTo(this.getHeap()[index]) < this._ZERO {
+		smallest = leftIndex
 	} else {
-		largest = index
+		smallest = index
 	}
 
-	if rightIndex <= this.index && this.biggerElement(rightIndex, largest) == rightIndex {
-		largest = rightIndex
+	// If right child exist, compare and
+	// update the smallest variable
+	if rightIndex < this.Size() {
+		if this.getHeap()[rightIndex].CompareTo(this.getHeap()[smallest]) < this._ZERO {
+			smallest = rightIndex
+		}
 	}
 
-	if largest != index {
-		swap(this.getHeap(), index, largest)
-		this.heapfyDown(largest)
+	// If Node i violates the min heap
+	// property, swap  current node i with
+	// smallest to fix the min-heap property
+	// and recursively call heapify for node smallest.
+	if smallest != index {
+		swap(this.getHeap(), index, smallest)
+		this.heapfyDown(smallest)
 	}
+	/*
+
+		var largest int
+		if rightIndex < this.Size() && leftIndex <= this.index && this.biggerElement(leftIndex, rightIndex) == leftIndex {
+			largest = leftIndex
+		} else {
+			largest = index
+		}
+
+		if rightIndex < this.Size() && rightIndex <= this.index && this.biggerElement(rightIndex, largest) == rightIndex {
+			largest = rightIndex
+		}
+
+		if largest != index {
+			swap(this.getHeap(), index, largest)
+			this.heapfyDown(largest)
+		}
+	*/
+
 }
 
 /**
@@ -203,21 +240,26 @@ func (this *HeapImpl) Insert(element Comparable) {
 
 		this.index++
 		this.getHeap()[this.index] = element
+
 		this.heapify(this.index)
 	}
 }
 
 func (this *HeapImpl) BuildHeap(array []Comparable) {
 	if len(array) > 0 {
-		this.heap = make([]Comparable, len(array))
+		// this.heap = make([]Comparable, len(array))
+		this.heap = array
 
 		this.index = -1
-
 		for _, v := range array {
 			if v != nil {
 				this.Insert(v)
 			}
 		}
+		// // Calling Heapify for all non leaf nodes
+		// for i := (this.Size() / 2) - 1; i >= 0; i-- {
+		// 	this.heapfyDown(i)
+		// }
 	}
 }
 
@@ -307,71 +349,33 @@ func (this HeapImpl) BFS(level int) ([]Comparable, error) {
 
 }
 
-func (this HeapImpl) getBiggerSmallerIndices(idx int) (smaller, bigger int) {
-	leftIndex := this.left(idx)
-	rightIndex := this.right(idx)
+func (this HeapImpl) VisitLargestFromHeap(n int) ([]Comparable, error) {
+	// minHeap := New(getMinHeapComparator())
 
-	bigger = this.biggerElement(leftIndex, rightIndex)
+	middle := (len(this.heap) / 2) // + 1
+	fmt.Println("heap... ", this.heap)
 
-	if bigger == leftIndex {
-		smaller = rightIndex
-	} else {
-		smaller = leftIndex
-	}
+	fisrtMiddleArray := makeArrayOfComparable(n)
+	copy(fisrtMiddleArray, this.heap[:middle])
+	fmt.Println("arr minheap ", fisrtMiddleArray)
 
-	return
-}
+	minHeap := NewMinHeap(fisrtMiddleArray)
 
-func (this HeapImpl) canIWalk(numbers []Comparable, idx, top int) bool {
-	canWalk := len(numbers) < cap(numbers)
-	canWalk = canWalk && idx < cap(numbers)
-	canWalk = canWalk && this.getHeap()[idx].CompareTo(this.getHeap()[top]) < 0
-	return canWalk
-}
-
-func (this HeapImpl) VisitTop10(n int) ([]Comparable, error) {
-	numbers := make([]Comparable, 0, n)
-
-	bigger, smaller := this.getBiggerSmallerIndices(this._ZERO)
-
-	numbers = append(numbers, this.RootElement())
-	numbers = this.visitBranch(smaller, bigger, numbers)
-	// visiting right sub-tree
-	numbers = append(numbers, this.getHeap()[bigger])
-	top, _ := this.getBiggerSmallerIndices(bigger)
-	numbers = this.visitBranch(bigger, top, numbers)
-
-	return numbers, nil
-}
-
-/**
-1. escolher o nó com maior e menor valor
-2. Percorra a sub-arvore de menor valor até achar valores maior que a raiz da sub-avores e menor que o maior
-3. caso ache algum valor maior que o maior, ou não ache mais valores, ou o número de valores seja = 10 retorne
-4. retorne para outra sub-avore ou para a função
-*/
-func (this HeapImpl) visitBranch(idx int, top int, numbers []Comparable) []Comparable {
-	if this.canIWalk(numbers, idx, top) {
-		numbers = append(numbers, this.getHeap()[idx])
-
-		bigger, smaller := this.getBiggerSmallerIndices(idx)
-
-		if this.canIWalk(numbers, smaller, top) {
-			numbers = this.visitBranch(smaller, bigger, numbers)
-			numbers = this.visitBranch(bigger, top, numbers)
+	for idx := middle; idx < len(this.heap); idx++ {
+		if this.getHeap()[idx].CompareTo(minHeap.RootElement()) > this._ZERO {
+			if minHeap.IsFull() {
+				minHeap.ExtractRootElement()
+			}
+			minHeap.Insert(this.getHeap()[idx])
 		}
 	}
 
-	return numbers
+	return minHeap.toArray(), nil
 }
 
 /***************************
 *****  public Access Methods
 ****************************/
-
-func (this HeapImpl) IsEmpty() bool {
-	return this.index == -1
-}
 
 func (this HeapImpl) toArray() []Comparable {
 	resp := makeArrayOfComparable(this.index + 1)
@@ -389,6 +393,14 @@ func (this HeapImpl) RootElement() Comparable {
 	}
 
 	return root
+}
+
+func (this HeapImpl) IsEmpty() bool {
+	return this.index == -1
+}
+
+func (this HeapImpl) IsFull() bool {
+	return this.index == len(this.heap)-1
 }
 
 func (this HeapImpl) Size() int {

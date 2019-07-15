@@ -197,21 +197,24 @@ func TestBFS2(t *testing.T) {
 	}
 }
 
-func TestSearchInOrder(t *testing.T) {
+func TestVisitTop10FromHeap(t *testing.T) {
 
-	result := generateAscedingComparables(10)
 	// a := generateOddAscedingComparables(30)
 	a := generateDescedingComparables(31)
+	// a := []Comparable{inteiro{11}, inteiro{3}, inteiro{2}, inteiro{1}, inteiro{15}, inteiro{5},
+	// 	inteiro{4}, inteiro{45}, inteiro{88}, inteiro{96}, inteiro{50}, inteiro{45}}
 	heap := NewMinHeap(a)
-	// fmt.Println("heap", heap)
+	fmt.Println("heap", heap)
 
-	numbers, err := heap.VisitTop10(10)
+	numbers, err := heap.VisitLargestFromHeap(10)
+	fmt.Println("Top10 numbers", numbers)
+	fmt.Println("Original numbers", heap)
 
-	fmt.Println("numbers", numbers)
 	// bfs, err := heap.BFS(4)
 	// fmt.Println("bfs odds", bfs[:10])
 
 	if err != nil {
+		result := generateDescedingComparables(10)
 		t.Errorf(msg, result, err)
 	}
 
@@ -220,7 +223,7 @@ func TestSearchInOrder(t *testing.T) {
 func TestTop10(t *testing.T) {
 
 	numbers := generateDistinctIntRandom(50)
-	fmt.Println("rnd numbers", numbers)
+	// fmt.Println("rnd numbers", numbers)
 
 	top10 := make([]int, 10)
 	for i := 0; i < len(top10); i++ {
@@ -237,5 +240,5 @@ func TestTop10(t *testing.T) {
 		numbers[iMax] = math.MinInt64
 	}
 
-	fmt.Println("top10", top10)
+	// fmt.Println("top10", top10)
 }
