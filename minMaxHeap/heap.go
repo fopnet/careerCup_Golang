@@ -351,7 +351,7 @@ func (this HeapImpl) BFS(level int) ([]Comparable, error) {
 
 /**
 Funcionamento para buscar os n maiores valores
-1. Colocar todos os valores da amostra em uma MinHeapAmostra
+1. Criar uma MinHeapAmostra com todos os valores do array da amostra
 2. Criar outra MinHeapResultado de tamanho n, para armanezar os maiores valores, com a primeira metade da MinHeapAmostra
 3. Varrer a segunda metade MinHeapAmostra, verificando quais valores são maiores que a raiz da MinHeapResultado
 4. Coloque esse valor na MinHeapResultado e chamar o Heapify(0)
