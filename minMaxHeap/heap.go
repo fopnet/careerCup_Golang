@@ -173,11 +173,11 @@ func (this HeapImpl) heapfyDown(index int) {
 	}
 
 	// If Node i violates the min heap
-	// property, swap  current node i with
+	// property, Swap  current node i with
 	// smallest to fix the min-heap property
 	// and recursively call heapify for node smallest.
 	if smallest != index {
-		swap(this.getHeap(), index, smallest)
+		Swap(this.getHeap(), index, smallest)
 		this.heapfyDown(smallest)
 	}
 	/*
@@ -194,7 +194,7 @@ func (this HeapImpl) heapfyDown(index int) {
 		}
 
 		if largest != index {
-			swap(this.getHeap(), index, largest)
+			Swap(this.getHeap(), index, largest)
 			this.heapfyDown(largest)
 		}
 	*/
@@ -209,7 +209,7 @@ func (this HeapImpl) heapfyUp(position int) {
 	currentIndex := position
 
 	for this.biggerElement(currentIndex, this.parent(currentIndex)) == currentIndex && this.parent(currentIndex) != currentIndex {
-		swap(this.getHeap(), currentIndex, this.parent(currentIndex))
+		Swap(this.getHeap(), currentIndex, this.parent(currentIndex))
 		currentIndex = this.parent(currentIndex)
 	}
 
@@ -235,7 +235,7 @@ func (this *HeapImpl) Insert(element Comparable) {
 	if element != nil {
 
 		if this.index == len(this.heap)-1 {
-			this.heap = copyOf(this.heap, len(this.heap)+this._INCREASING_FACTOR)
+			this.heap = CopyOf(this.heap, len(this.heap)+this._INCREASING_FACTOR)
 		}
 
 		this.index++
@@ -291,7 +291,7 @@ func (this *HeapImpl) Heapsort(array []Comparable) []Comparable {
 		this.BuildHeap(array)
 		for i := len(array) / 2; i >= 0; i-- {
 			// for i := len(array) - 1; i >= 0; i-- {
-			swap(this.heap, this._ZERO, i)
+			Swap(this.heap, this._ZERO, i)
 			this.index--
 			this.heapify(this._ZERO)
 		}
@@ -300,7 +300,7 @@ func (this *HeapImpl) Heapsort(array []Comparable) []Comparable {
 		// if len(result) > 1 && this.IsMaxHeap() {
 		// if len(result) > 1 && this.getHeap()[this._ZERO].CompareTo(this.getHeap()[1]) == 1 {
 		// 	fmt.Println("inversing")
-		// 	inverse := makeArrayOfComparable(len(array))
+		// 	inverse := MakeArrayOfComparable(len(array))
 		// 	for i := 0; i < len(array); i++ {
 		// 		inverse[i] = this.heap[len(array)-1-i]
 		// 	}
@@ -362,7 +362,7 @@ func (this HeapImpl) VisitLargestFromHeap(n int) ([]Comparable, error) {
 	middle := (len(this.heap) / 2) // + 1
 	// fmt.Println("heap... ", this.heap)
 
-	fisrtMiddleArray := makeArrayOfComparable(n)
+	fisrtMiddleArray := MakeArrayOfComparable(n)
 	copy(fisrtMiddleArray, this.heap[:middle])
 	// fmt.Println("arr minheap ", fisrtMiddleArray)
 
@@ -385,7 +385,7 @@ func (this HeapImpl) VisitLargestFromHeap(n int) ([]Comparable, error) {
 ****************************/
 
 func (this HeapImpl) toArray() []Comparable {
-	resp := makeArrayOfComparable(this.index + 1)
+	resp := MakeArrayOfComparable(this.index + 1)
 	for i := 0; i <= this.index; i++ {
 		resp[i] = this.heap[i]
 	}

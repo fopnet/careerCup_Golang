@@ -20,3 +20,33 @@ func Random(n int) int {
 
 	return rand.Intn(n)
 }
+
+func GenerateIntRandom(n int) []int {
+	var a = []int{}
+	for i := 1; i <= n; i++ {
+		rnd := RandomRange(0, n)
+		a = append(a, rnd)
+	}
+	return a
+}
+
+func GenerateAscending(n int) []int {
+	var a = []int{}
+	for i := 1; i <= n; i++ {
+		a = append(a, i)
+	}
+	return a
+}
+
+func GenerateDistinctIntRandom(n int) []int {
+	var a = []int{}
+	sorted := map[int]bool{}
+	for i := 1; i <= n; i++ {
+		rnd := RandomRange(0, n)
+		if _, ok := sorted[rnd]; !ok {
+			a = append(a, rnd)
+			sorted[rnd] = true
+		}
+	}
+	return a
+}
