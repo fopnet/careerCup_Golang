@@ -36,7 +36,7 @@ func TestMinHeap(t *testing.T) {
 
 	heap := NewMinHeap(a)
 
-	h := heap.toArray()
+	h := heap.ToArray()
 	fmt.Println("built heap", h)
 
 	if heap.RootElement() != i1 {

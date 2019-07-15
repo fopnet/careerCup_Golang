@@ -6,6 +6,7 @@ type Comparable interface {
 	// LessThan(j interface{}) bool
 	// EqualTo(j interface{}) bool
 	CompareTo(o interface{}) int
+	ToString() string
 }
 
 type Comparator func(o1, o2 Comparable) int
@@ -31,6 +32,10 @@ func MakeArrayOfComparable(size int) []Comparable {
 
 type inteiro struct {
 	num int
+}
+
+func (this inteiro) ToString() string {
+	return string(this.num)
 }
 
 func (this inteiro) CompareTo(b interface{}) int {

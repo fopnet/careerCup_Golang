@@ -9,6 +9,10 @@ type dummyComparable struct {
 	num int
 }
 
+func (this dummyComparable) ToString() string {
+	return string(this.num)
+}
+
 func (this dummyComparable) CompareTo(b interface{}) int {
 	ib := b.(dummyComparable)
 	switch {
@@ -24,7 +28,7 @@ func (this dummyComparable) CompareTo(b interface{}) int {
 // https://pt.wikipedia.org/wiki/Heap
 type Heap interface {
 	RootElement() Comparable
-	toArray() []Comparable
+	ToArray() []Comparable
 
 	Insert(element Comparable)
 	BuildHeap(array []Comparable)
@@ -377,14 +381,14 @@ func (this HeapImpl) VisitLargestFromHeap(n int) ([]Comparable, error) {
 		}
 	}
 
-	return minHeapResultado.toArray(), nil
+	return minHeapResultado.ToArray(), nil
 }
 
 /***************************
 *****  public Access Methods
 ****************************/
 
-func (this HeapImpl) toArray() []Comparable {
+func (this HeapImpl) ToArray() []Comparable {
 	resp := MakeArrayOfComparable(this.index + 1)
 	for i := 0; i <= this.index; i++ {
 		resp[i] = this.heap[i]
