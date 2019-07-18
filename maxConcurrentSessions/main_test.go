@@ -121,14 +121,14 @@ func TestAddUniqueLine(t *testing.T) {
 	l2 := Line{1, 3}
 	lines := Lines{}
 
-	added := lines.addIfNotExists(l1)
-	if added == false {
-		t.Errorf(erroPadrao, true, added)
+	AddEd := lines.addIfNotExists(l1)
+	if AddEd == false {
+		t.Errorf(erroPadrao, true, AddEd)
 	}
 
-	added = lines.addIfNotExists(l2)
-	if added == true {
-		t.Errorf(erroPadrao, false, added)
+	AddEd = lines.addIfNotExists(l2)
+	if AddEd == true {
+		t.Errorf(erroPadrao, false, AddEd)
 	}
 
 	if len(lines) != 1 {
