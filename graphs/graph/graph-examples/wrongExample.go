@@ -1,4 +1,4 @@
-package graphExamples
+package main
 
 /**
 https://levelup.gitconnected.com/simple-implementation-of-dijkstra-using-heap-in-go-fa6bea892909
@@ -109,15 +109,28 @@ func main() {
 	fmt.Println("Dijkstra")
 	// Example
 	graph := newGraph()
-	// graph.addEdge("S", "B", 4)
-	// graph.addEdge("S", "C", 2)
-	// graph.addEdge("B", "C", 1)
-	// graph.addEdge("B", "D", 5)
-	// graph.addEdge("C", "D", 8)
-	// graph.addEdge("C", "E", 10)
-	// graph.addEdge("D", "E", 2)
-	// graph.addEdge("D", "T", 6)
-	// graph.addEdge("E", "T", 2)
+	// originalDouglasExample(graph)
+
+	// felipeDouglasExample(graph)
+
+	douglasDouglasExample(graph)
+
+	fmt.Println(graph.getPath("A", "I"))
+}
+
+func originalDouglasExample(graph *graph) {
+	graph.addEdge("S", "B", 4)
+	graph.addEdge("S", "C", 2)
+	graph.addEdge("B", "C", 1)
+	graph.addEdge("B", "D", 5)
+	graph.addEdge("C", "D", 8)
+	graph.addEdge("C", "E", 10)
+	graph.addEdge("D", "E", 2)
+	graph.addEdge("D", "T", 6)
+	graph.addEdge("E", "T", 2)
+}
+
+func felipeDouglasExample(graph *graph) {
 
 	graph.addEdge("A", "B", 4)
 	graph.addEdge("A", "H", 8)
@@ -126,31 +139,47 @@ func main() {
 	graph.addEdge("B", "C", 8)
 
 	graph.addEdge("H", "I", 7)
-	graph.addEdge("H", "B", 11)
+	// graph.addEdge("H", "B", 11)
 	graph.addEdge("H", "G", 1)
 	// graph.addEdge("H", "A", 8)
 
 	graph.addEdge("C", "I", 2)
 	graph.addEdge("C", "D", 7)
-	graph.addEdge("C", "F", 14)
+	graph.addEdge("C", "F", 4) 
 
-	graph.addEdge("D", "E", 9)
+	// graph.addEdge("D", "E", 9)
 	graph.addEdge("D", "F", 14)
-	graph.addEdge("D", "C", 7)
+	// graph.addEdge("D", "C", 7)
 
-	graph.addEdge("E", "D", 9)
-	graph.addEdge("E", "F", 10)
+	// graph.addEdge("E", "D", 9)
+	// graph.addEdge("E", "F", 10)
 
-	graph.addEdge("F", "E", 10)
-	graph.addEdge("F", "D", 14)
+	// graph.addEdge("F", "E", 10)
+	// graph.addEdge("F", "D", 14)
 
 	graph.addEdge("G", "F", 2)
-	graph.addEdge("G", "H", 1)
-	graph.addEdge("G", "I", 6)
+	// graph.addEdge("G", "H", 1)
+	// graph.addEdge("G", "I", 6)
 
 	graph.addEdge("I", "G", 6)
-	graph.addEdge("I", "H", 7)
-	graph.addEdge("I", "C", 2)
+	// graph.addEdge("I", "H", 7)
+	// graph.addEdge("I", "C", 2)
+}
 
-	fmt.Println(graph.getPath("A", "I"))
+func douglasDouglasExample(graph *graph) {
+
+	graph.addEdge("A", "B", 4)
+	graph.addEdge("A", "H", 8)
+	graph.addEdge("B", "H", 11)
+	graph.addEdge("B", "C", 8)
+	graph.addEdge("H", "I", 7)
+
+	graph.addEdge("H", "G", 1)
+	graph.addEdge("C", "D", 7)
+	graph.addEdge("C", "I", 2)
+	graph.addEdge("C", "F", 4)
+	graph.addEdge("I", "G", 6)
+	graph.addEdge("G", "F", 2)
+	graph.addEdge("D", "F", 14)
+
 }

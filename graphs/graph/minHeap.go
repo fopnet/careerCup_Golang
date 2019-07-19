@@ -6,6 +6,7 @@ import hp "container/heap"
 MinHeap extended by container/heap
 */
 type path struct {
+	node string
 	value int
 	nodes []string
 }
