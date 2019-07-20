@@ -97,54 +97,48 @@ func TestMatrix2Graph(t *testing.T) {
 
 	destiny, graph := convertMatrixToGraph(matrix)
 
-	fmt.Println("graph", destiny, graph)
+	fmt.Printf("destiny %s \n graph=>%v\n", destiny, graph)
 }
 
-func convertMatrixToGraph(matrix [][]rune) (string, graph.Graph) {
+func convertMatrixToGraph(m [][]rune) (string, graph.Graph) {
 
 	var destiny string
 
-	n := len(matrix)
+	n := len(m)
 	graph := graph.NewDirectedGraph(n * n)
 
 	const A = int('A')
 	const E = int('E')
 
-	for l, _ := range matrix {
-		for c, _ := range matrix {
-			v := (matrix[l][c])
+	for l, _ := range m {
+		for c, _ := range m {
+			v := (m[l][c])
 			// v := string(matrix[l][c])
 			var node string
 			var edge string
 
 			switch v {
 			case 'X':
-				destiny = string(rune(A + l))
+				destiny = getNode(l, c)
 			case 'O':
 				// Ci->Cj check horizontal right moving
-				if c < n-1 && matrix[l][c+1] == 'O' {
-					node = string(rune(E + c))
-					edge = string(rune(E + c + 1))
+				if c < n-1 && canMove(l, c+1, m) {
+					node = getNode(l, c)
+					edge = getNode(l, c+1)
 					// graph.AddEdge(node, edge, c+1+l)
 					graph.AddEdge(node, edge, 1)
 				}
 				// Cj->Ci check horizontal left moving
-				if c > 0 && matrix[l][c-1] == 'O' {
-					node = string(rune(E + c))
-					edge = string(rune(E + c - 1))
+				if c > 0 && canMove(l, c-1, m) {
+					node = getNode(l, c)
+					edge = getNode(l, c-1)
 					// graph.AddEdge(node, edge, c-1+l)
 					graph.AddEdge(node, edge, 1)
 				}
 				// Ci->Lj+1 check down vertical moving
-				if l < n-1 && matrix[l+1][c] == 'O' {
-					if l > 0 && matrix[l-1][c] == 'O' {
-						// puts the graph connection in serie Li->Li+1
-						node = string(rune(A + l))
-					} else {
-						// use the normal rule C->Lj+1
-						node = string(rune(E + c))
-					}
-					edge = string(rune(A + l + 1))
+				if l < n-1 && canMove(l+1, c, m) {
+					node = getNode(l, c)
+					edge = getNode(l+1, c)
 					// graph.AddEdge(node, edge, l+1+c)
 					graph.AddEdge(node, edge, 1)
 				}
@@ -164,6 +158,14 @@ func getWeight(l, c int) int {
 	return (c - cTarget) + (lTarget - l)
 }
 
+func canMove(l, c int, m [][]rune) bool {
+	return m[l][c] == 'O' || m[l][c] == 'X'
+}
+
+func getNode(l, c int) string {
+	return fmt.Sprintf("%d,%d", l, c)
+}
+
 func TestMatrix2GraphPlusShortestPath(t *testing.T) {
 	matrix := [][]rune{
 		{'O', 'O', 'O', 'O'},
@@ -174,6 +176,6 @@ func TestMatrix2GraphPlusShortestPath(t *testing.T) {
 
 	destiny, graph := convertMatrixToGraph(matrix)
 
-	w, path, mapPath := graph.GetShortestPath("E", destiny)
-	fmt.Printf("%s -> %s has weight %d walking %v ::: %v \n", "A", destiny, w, path, mapPath)
+	w, path, mapPath := graph.GetShortestPath("0,0", destiny)
+	fmt.Printf("%s -> %s has weight %d walking %v ::: %v \n", "0,0", destiny, w, path, mapPath)
 }
